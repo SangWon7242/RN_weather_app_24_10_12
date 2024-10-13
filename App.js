@@ -11,6 +11,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const App = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [city, setCity] = useState(null);
 
   // 허가여부
   const [permitted, setPermitted] = useState(true);
@@ -25,6 +26,27 @@ const App = () => {
 
       return;
     }
+
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({ accuracy: 5 });
+    /*
+    console.log(latitude); // 위도
+    console.log(longitude); // 경도
+    */
+
+    const address = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
+
+    /*
+    console.log(address);
+    console.log(address[0].city);
+    */
+
+    const cityAddress = address[0].city;
+    setCity(cityAddress);
   };
 
   useEffect(() => {
@@ -34,7 +56,7 @@ const App = () => {
   return (
     <View style={styles.container}>
       <View style={styles.cityCon}>
-        <Text style={styles.city}>Ansan</Text>
+        <Text style={styles.city}>{city}</Text>
       </View>
       <View style={styles.regDateCon}>
         <Text style={styles.regDate}>10월 13일, 일, 13:18</Text>
