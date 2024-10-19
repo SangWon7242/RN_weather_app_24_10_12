@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { Dimensions } from "react-native";
 import * as Location from "expo-location";
 import { GOOGLE_GEOLOCATION_API_KEY, WHETHER_API_KEY } from "@env";
@@ -51,11 +58,12 @@ const App = () => {
     const addressComponents = dataRs.address_components[0];
     const cityAddress = addressComponents.short_name;
 
-    const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${whatherApiKey}`;
+    const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&units=metric&lang=kr&appid=${whatherApiKey}`;
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
-    console.log(jsonForWeather);
+    // console.log(jsonForWeather.daily);
+    setDailyWeather(jsonForWeather.daily);
 
     setCity(cityAddress);
   };
@@ -78,38 +86,34 @@ const App = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.weather}
       >
-        <View style={styles.weatherInner}>
-          <View style={styles.day}>
-            <Text style={styles.desc}>맑음</Text>
+        {dailyWeather.length === 0 ? (
+          <View style={styles.weatherInner}>
+            <ActivityIndicator size="large" color="#00ff00" />
           </View>
-          <View style={styles.tempCon}>
-            <Text style={styles.temp}>24</Text>
-          </View>
-        </View>
-        <View style={styles.weatherInner}>
-          <View style={styles.day}>
-            <Text style={styles.desc}>맑음</Text>
-          </View>
-          <View style={styles.tempCon}>
-            <Text style={styles.temp}>24</Text>
-          </View>
-        </View>
-        <View style={styles.weatherInner}>
-          <View style={styles.day}>
-            <Text style={styles.desc}>맑음</Text>
-          </View>
-          <View style={styles.tempCon}>
-            <Text style={styles.temp}>24</Text>
-          </View>
-        </View>
-        <View style={styles.weatherInner}>
-          <View style={styles.day}>
-            <Text style={styles.desc}>맑음</Text>
-          </View>
-          <View style={styles.tempCon}>
-            <Text style={styles.temp}>24</Text>
-          </View>
-        </View>
+        ) : (
+          dailyWeather.map((day, index) => (
+            <View key={index} style={styles.weatherInner}>
+              <View style={styles.day}>
+                <Text style={styles.desc}>{day.weather[0].description}</Text>
+              </View>
+              <View style={styles.tempCon}>
+                <Text style={styles.temp}>
+                  {parseFloat(day.temp.day).toFixed(0)}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 100,
+                    position: "absolute",
+                    top: 65,
+                    right: 50,
+                  }}
+                >
+                  º
+                </Text>
+              </View>
+            </View>
+          ))
+        )}
       </ScrollView>
       <StatusBar style="auto" />
     </View>
@@ -152,7 +156,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
   day: {
-    flex: 0.2,
+    flex: 0.15,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -163,12 +167,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   tempCon: {
-    flex: 0.3,
+    flex: 0.5,
     alignItems: "center",
     justifyContent: "center",
   },
   temp: {
-    fontSize: 120,
+    fontSize: 200,
   },
 });
 
