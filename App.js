@@ -62,7 +62,7 @@ const App = () => {
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
-    // console.log(jsonForWeather.daily);
+    console.log(jsonForWeather.daily);
     setDailyWeather(jsonForWeather.daily);
 
     setCity(cityAddress);
