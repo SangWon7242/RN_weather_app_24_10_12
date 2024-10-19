@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import * as Location from "expo-location";
+import { GOOGLE_GEOLOCATION_API_KEY } from "@env";
 import React, { useState, useEffect } from "react";
 
 // const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -35,17 +36,26 @@ const App = () => {
     console.log(longitude); // 경도
     */
 
+    /*
     const address = await Location.reverseGeocodeAsync(
       { latitude, longitude },
       { useGoogleMaps: false }
     );
-
-    /*
-    console.log(address);
-    console.log(address[0].city);
     */
 
-    const cityAddress = address[0].city;
+    const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${myApiKey}`;
+
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    /*
+    console.log(data);
+    console.log(data.results[7].formatted_address);
+    */
+
+    // const cityAddress = address[0].city;
+
+    const cityAddress = data.results[7].formatted_address;
     setCity(cityAddress);
   };
 
@@ -59,7 +69,7 @@ const App = () => {
         <Text style={styles.city}>{city}</Text>
       </View>
       <View style={styles.regDateCon}>
-        <Text style={styles.regDate}>10월 13일, 일, 13:18</Text>
+        <Text style={styles.regDate}>10월 19일, 일, 13:18</Text>
       </View>
       <ScrollView
         horizontal
