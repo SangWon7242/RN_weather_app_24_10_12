@@ -19,7 +19,6 @@ const App = () => {
 
   const locationData = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
-    // console.log(granted);
 
     if (!granted) {
       setPermitted(false);
@@ -31,16 +30,14 @@ const App = () => {
     const {
       coords: { latitude, longitude },
     } = await Location.getCurrentPositionAsync({ accuracy: 5 });
-    /*
-    console.log(latitude); // 위도
-    console.log(longitude); // 경도
-    */
 
     /*
     const address = await Location.reverseGeocodeAsync(
       { latitude, longitude },
       { useGoogleMaps: false }
     );
+
+    console.log(address);
     */
 
     const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
@@ -48,14 +45,13 @@ const App = () => {
 
     const response = await fetch(apiUrl);
     const data = await response.json();
-    /*
     console.log(data);
-    console.log(data.results[7].formatted_address);
-    */
 
     // const cityAddress = address[0].city;
 
-    const cityAddress = data.results[7].formatted_address;
+    const dataRs = data.results[7];
+    const addressComponents = dataRs.address_components[0];
+    const cityAddress = addressComponents.short_name;
     setCity(cityAddress);
   };
 
