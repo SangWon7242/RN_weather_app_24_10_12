@@ -2,20 +2,23 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import * as Location from "expo-location";
-import { GOOGLE_GEOLOCATION_API_KEY } from "@env";
+import { GOOGLE_GEOLOCATION_API_KEY, WHETHER_API_KEY } from "@env";
 import React, { useState, useEffect } from "react";
 
-// const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
 const SCREEN_WIDTH = Dimensions.get("window").width;
+
+const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
+const whatherApiKey = WHETHER_API_KEY;
 
 const App = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [city, setCity] = useState(null);
 
   // 허가여부
   const [permitted, setPermitted] = useState(true);
+
+  const [city, setCity] = useState(null);
+  const [dailyWeather, setDailyWeather] = useState([]);
 
   const locationData = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -36,22 +39,24 @@ const App = () => {
       { latitude, longitude },
       { useGoogleMaps: false }
     );
-
-    console.log(address);
+    
     */
 
-    const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
     const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${myApiKey}`;
 
     const response = await fetch(apiUrl);
     const data = await response.json();
-    console.log(data);
-
-    // const cityAddress = address[0].city;
 
     const dataRs = data.results[7];
     const addressComponents = dataRs.address_components[0];
     const cityAddress = addressComponents.short_name;
+
+    const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${whatherApiKey}`;
+    const respToWeather = await fetch(weatherApiUrl);
+    const jsonForWeather = await respToWeather.json();
+
+    console.log(jsonForWeather);
+
     setCity(cityAddress);
   };
 
