@@ -12,6 +12,8 @@ import * as Location from "expo-location";
 import { GOOGLE_GEOLOCATION_API_KEY, WHETHER_API_KEY } from "@env";
 import React, { useState, useEffect } from "react";
 
+import Fontisto from "@expo/vector-icons/Fontisto";
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
@@ -62,7 +64,7 @@ const App = () => {
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
-    console.log(jsonForWeather.daily);
+    //console.log(jsonForWeather.daily);
     setDailyWeather(jsonForWeather.daily);
 
     setCity(cityAddress);
@@ -95,6 +97,9 @@ const App = () => {
             <View key={index} style={styles.weatherInner}>
               <View style={styles.day}>
                 <Text style={styles.desc}>{day.weather[0].description}</Text>
+                <Text style={styles.weatherIcon}>
+                  <Fontisto name="rain" size={45} color="black" />
+                </Text>
               </View>
               <View style={styles.tempCon}>
                 <Text style={styles.temp}>
@@ -157,14 +162,17 @@ const styles = StyleSheet.create({
   },
   day: {
     flex: 0.15,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 10,
   },
   desc: {
-    flex: 1.5,
-    marginTop: 20,
-    fontSize: 25,
+    fontSize: 40,
     fontWeight: "bold",
+  },
+  weatherIcon: {
+    marginTop: 20,
   },
   tempCon: {
     flex: 0.5,
