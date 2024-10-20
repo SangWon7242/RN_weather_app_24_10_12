@@ -45,6 +45,7 @@ const WeahterDesc = ({ day }) => {
 
 const useRegDate = () => {
   const [currentDate, setCurrentDate] = useState(null);
+  const [date, setDate] = useState(null);
 
   useEffect(() => {
     const date = new Date();
@@ -72,10 +73,11 @@ const useRegDate = () => {
     formattedDate = `${year}, ${month}월 ${date2}일 ${hoursString}:${miuntesString}${ampm}, ${dayOfTheWeek[day]}`;
 
     // console.log(formattedDate);
+    setDate(date2);
     setCurrentDate(formattedDate);
   }, []);
 
-  return currentDate;
+  return { currentDate, date };
 };
 
 const App = () => {
@@ -87,7 +89,7 @@ const App = () => {
 
   const [city, setCity] = useState(null);
   const [dailyWeather, setDailyWeather] = useState([]);
-  const currentDate = useRegDate();
+  const { currentDate, date } = useRegDate();
 
   const locationData = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -124,7 +126,7 @@ const App = () => {
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
-    console.log(jsonForWeather.daily);
+    // console.log(jsonForWeather.daily);
 
     setDailyWeather(jsonForWeather.daily);
 
@@ -175,7 +177,10 @@ const App = () => {
                 </Text>
               </View>
               <View style={styles.forcastCon}>
-                <Text style={styles.forcastTitle}>Week Forcast</Text>
+                <View style={styles.forcastTextBox}>
+                  <Text style={styles.forcastTitle}>Week Forcast</Text>
+                  <Text style={styles.weekDayText}>{date}th</Text>
+                </View>
                 <View style={styles.infoBox}></View>
               </View>
             </View>
@@ -247,10 +252,23 @@ const styles = StyleSheet.create({
     flex: 0.6,
     alignItems: "center",
   },
+  forcastTextBox: {
+    width: "80%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
   forcastTitle: {
     fontSize: 25,
     fontWeight: "bold",
-    width: "80%",
+  },
+  weekDayText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    flex: 1,
+    height: "100%",
+    textAlign: "right",
+    paddingTop: 10,
+    paddingRight: 10,
   },
   infoBox: {
     flex: 0.6,
