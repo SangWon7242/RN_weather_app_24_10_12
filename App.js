@@ -124,6 +124,8 @@ const App = () => {
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
+    console.log(jsonForWeather.daily);
+
     setDailyWeather(jsonForWeather.daily);
 
     setCity(cityAddress);
@@ -172,6 +174,10 @@ const App = () => {
                   º
                 </Text>
               </View>
+              <View style={styles.forcastCon}>
+                <Text style={styles.forcastTitle}>Week Forcast</Text>
+                <View style={styles.infoBox}></View>
+              </View>
             </View>
           ))
         )}
@@ -211,7 +217,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
-  weather: {},
   weatherInner: {
     flex: 3,
     width: SCREEN_WIDTH,
@@ -237,6 +242,22 @@ const styles = StyleSheet.create({
   },
   temp: {
     fontSize: 200,
+  },
+  forcastCon: {
+    flex: 0.6,
+    alignItems: "center",
+  },
+  forcastTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    width: "80%",
+  },
+  infoBox: {
+    flex: 0.6,
+    backgroundColor: "black",
+    width: "80%",
+    borderRadius: 10,
+    marginTop: 10,
   },
 });
 
