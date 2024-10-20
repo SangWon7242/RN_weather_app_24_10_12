@@ -1,4 +1,4 @@
-export const weatherDescKo = [
+export const WeatherDescKo = [
   { 201: "가벼운 비를 동반한 천둥구름", icon: "weather-lightning-rainy" },
   { 200: "비를 동반한 천둥구름", icon: "weather-lightning-rainy" },
   { 202: "폭우를 동반한 천둥구름", icon: "weather-lightning-rainy" },

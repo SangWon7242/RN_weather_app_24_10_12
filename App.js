@@ -11,8 +11,8 @@ import { Dimensions } from "react-native";
 import * as Location from "expo-location";
 import { GOOGLE_GEOLOCATION_API_KEY, WHETHER_API_KEY } from "@env";
 import React, { useState, useEffect } from "react";
-import Fontisto from "@expo/vector-icons/Fontisto";
-import { weatherDescKo } from "./WeatherDescKo";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { WeatherDescKo } from "./WeatherDescKo";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -20,14 +20,27 @@ const myApiKey = GOOGLE_GEOLOCATION_API_KEY;
 const whatherApiKey = WHETHER_API_KEY;
 
 const WeahterDesc = ({ day }) => {
-  const rs = weatherDescKo.find((item) => {
+  const rs = WeatherDescKo.find((item) => {
     const id = day.weather[0].id;
     return Object.keys(item)[0] == id;
   });
 
   const descRs = rs ? Object.values(rs)[0] : "해당하는 날씨 정보가 없습니다.";
 
-  return <Text style={styles.desc}>{descRs}</Text>;
+  const iconName = rs ? (
+    Object.values(rs)[1]
+  ) : (
+    <MaterialCommunityIcons name="image-filter-none" size={40} color="black" />
+  );
+
+  return (
+    <>
+      <Text style={styles.desc}>{descRs}</Text>
+      <Text style={styles.weatherIcon}>
+        <MaterialCommunityIcons name={iconName} size={40} color="black" />
+      </Text>
+    </>
+  );
 };
 
 const App = () => {
@@ -67,15 +80,14 @@ const App = () => {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    const dataRs = data.results[7];
+    const dataRs = data.results[6];
     const addressComponents = dataRs.address_components[0];
     const cityAddress = addressComponents.short_name;
 
     const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&units=metric&lang=kr&appid=${whatherApiKey}`;
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
-    console.log(jsonForWeather);
-    console.log(jsonForWeather.daily);
+
     setDailyWeather(jsonForWeather.daily);
 
     setCity(cityAddress);
@@ -108,9 +120,6 @@ const App = () => {
             <View key={index} style={styles.weatherInner}>
               <View style={styles.day}>
                 <WeahterDesc day={day} />
-                <Text style={styles.weatherIcon}>
-                  <Fontisto name="rain" size={45} color="black" />
-                </Text>
               </View>
               <View style={styles.tempCon}>
                 <Text style={styles.temp}>
@@ -183,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   weatherIcon: {
-    marginTop: 20,
+    marginTop: 10,
   },
   tempCon: {
     flex: 0.5,
