@@ -43,6 +43,41 @@ const WeahterDesc = ({ day }) => {
   );
 };
 
+const useRegDate = () => {
+  const [currentDate, setCurrentDate] = useState(null);
+
+  useEffect(() => {
+    const date = new Date();
+
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let date2 = date.getDate();
+    let day = date.getDay();
+
+    let hours = date.getHours();
+    let miuntes = date.getMinutes();
+
+    const ampm = hours > 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 0시인 경우에는 12시를 의미!
+    // 0, true, null은 동격 취급!!
+
+    const hoursString = hours < 10 ? `0${hours}` : hours;
+    const miuntesString = miuntes < 10 ? `0${miuntes}` : miuntes;
+
+    let formattedDate = `${year}, ${hoursString}:${miuntesString}${ampm}`;
+
+    const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
+
+    formattedDate = `${year}, ${month}월 ${date2}일 ${hoursString}:${miuntesString}${ampm}, ${dayOfTheWeek[day]}`;
+
+    // console.log(formattedDate);
+    setCurrentDate(formattedDate);
+  }, []);
+
+  return currentDate;
+};
+
 const App = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -52,6 +87,7 @@ const App = () => {
 
   const [city, setCity] = useState(null);
   const [dailyWeather, setDailyWeather] = useState([]);
+  const currentDate = useRegDate();
 
   const locationData = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -103,7 +139,7 @@ const App = () => {
         <Text style={styles.city}>{city}</Text>
       </View>
       <View style={styles.regDateCon}>
-        <Text style={styles.regDate}>10월 19일, 일, 13:18</Text>
+        <Text style={styles.regDate}>{currentDate}</Text>
       </View>
       <ScrollView
         horizontal
@@ -188,7 +224,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   desc: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
   },
   weatherIcon: {
