@@ -43,9 +43,31 @@ const WeahterDesc = ({ day }) => {
   );
 };
 
+const WeekDay = ({ dt }) => {
+  const [day, setDay] = useState(null);
+
+  useEffect(() => {
+    const date = new Date(dt * 1000);
+
+    /*
+      const options = {
+        weekday: "short",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      */
+
+    const weekDay = date.toLocaleDateString("kr", { day: "numeric" });
+
+    setDay(weekDay);
+  }, []);
+
+  return <Text style={styles.weekDayText}>{day}th</Text>;
+};
+
 const useRegDate = () => {
   const [currentDate, setCurrentDate] = useState(null);
-  const [date, setDate] = useState(null);
 
   useEffect(() => {
     const date = new Date();
@@ -73,11 +95,10 @@ const useRegDate = () => {
     formattedDate = `${year}, ${month}월 ${date2}일 ${hoursString}:${miuntesString}${ampm}, ${dayOfTheWeek[day]}`;
 
     // console.log(formattedDate);
-    setDate(date2);
     setCurrentDate(formattedDate);
   }, []);
 
-  return { currentDate, date };
+  return currentDate;
 };
 
 const App = () => {
@@ -89,7 +110,7 @@ const App = () => {
 
   const [city, setCity] = useState(null);
   const [dailyWeather, setDailyWeather] = useState([]);
-  const { currentDate, date } = useRegDate();
+  const currentDate = useRegDate();
 
   const locationData = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -126,7 +147,7 @@ const App = () => {
     const respToWeather = await fetch(weatherApiUrl);
     const jsonForWeather = await respToWeather.json();
 
-    // console.log(jsonForWeather.daily);
+    console.log(jsonForWeather.daily);
 
     setDailyWeather(jsonForWeather.daily);
 
@@ -179,7 +200,7 @@ const App = () => {
               <View style={styles.forcastCon}>
                 <View style={styles.forcastTextBox}>
                   <Text style={styles.forcastTitle}>Week Forcast</Text>
-                  <Text style={styles.weekDayText}>{date}th</Text>
+                  <WeekDay dt={day.dt} />
                 </View>
                 <View style={styles.infoBox}></View>
               </View>
