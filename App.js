@@ -11,7 +11,7 @@ import { Dimensions } from "react-native";
 import * as Location from "expo-location";
 import { GOOGLE_GEOLOCATION_API_KEY, WHETHER_API_KEY } from "@env";
 import React, { useState, useEffect } from "react";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons, Feather, Ionicons } from "@expo/vector-icons";
 import { WeatherDescKo } from "./WeatherDescKo";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -202,7 +202,47 @@ const App = () => {
                   <Text style={styles.forcastTitle}>Week Forcast</Text>
                   <WeekDay dt={day.dt} />
                 </View>
-                <View style={styles.infoBox}></View>
+                <View style={styles.infoBox}>
+                  <View style={styles.infoInner}>
+                    <Feather name="wind" size={40} color="#fff" />
+                    <Text
+                      style={{ fontSize: 20, color: "#fff", paddingTop: 10 }}
+                    >
+                      {parseFloat(day.wind_speed).toFixed(0)}km/h
+                    </Text>
+                    <Text
+                      style={{ fontSize: 16, color: "#fff", paddingTop: 10 }}
+                    >
+                      풍속
+                    </Text>
+                  </View>
+                  <View style={styles.infoInner}>
+                    <Ionicons name="water-outline" size={40} color="#fff" />
+                    <Text
+                      style={{ fontSize: 20, color: "#fff", paddingTop: 10 }}
+                    >
+                      30%
+                    </Text>
+                    <Text
+                      style={{ fontSize: 16, color: "#fff", paddingTop: 10 }}
+                    >
+                      강수확률
+                    </Text>
+                  </View>
+                  <View style={styles.infoInner}>
+                    <Feather name="eye" size={40} color="#fff" />
+                    <Text
+                      style={{ fontSize: 20, color: "#fff", paddingTop: 10 }}
+                    >
+                      1.5km/h
+                    </Text>
+                    <Text
+                      style={{ fontSize: 16, color: "#fff", paddingTop: 10 }}
+                    >
+                      시야
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
           ))
@@ -297,6 +337,13 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 10,
     marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  infoInner: {
+    width: "30%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
