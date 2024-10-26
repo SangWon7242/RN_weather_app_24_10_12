@@ -221,7 +221,7 @@ const App = () => {
                     <Text
                       style={{ fontSize: 20, color: "#fff", paddingTop: 10 }}
                     >
-                      30%
+                      {parseFloat(day.pop).toFixed(0)}%
                     </Text>
                     <Text
                       style={{ fontSize: 16, color: "#fff", paddingTop: 10 }}
@@ -230,16 +230,20 @@ const App = () => {
                     </Text>
                   </View>
                   <View style={styles.infoInner}>
-                    <Feather name="eye" size={40} color="#fff" />
+                    <MaterialCommunityIcons
+                      name="sun-wireless-outline"
+                      size={40}
+                      color="#fff"
+                    />
                     <Text
                       style={{ fontSize: 20, color: "#fff", paddingTop: 10 }}
                     >
-                      1.5km/h
+                      {parseFloat(day.uvi).toFixed(0)}uv
                     </Text>
                     <Text
                       style={{ fontSize: 16, color: "#fff", paddingTop: 10 }}
                     >
-                      시야
+                      자외선
                     </Text>
                   </View>
                 </View>
